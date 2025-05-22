@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riqueza Digital en Colombia: Guía Interactiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Visualization & Content Choices:
+        - Report Info: Crecimiento economía digital, ventas online, proyecciones. Goal: Informar magnitud del mercado. Viz/Method: KPI Cards y Gráfico de Barras/Líneas (Chart.js). Interaction: Tooltips. Justification: Rápida visualización de cifras clave y tendencias. Library: Chart.js.
+        - Report Info: Penetración de internet, uso móvil, redes sociales. Goal: Mostrar alcance digital. Viz/Method: Gráficos de Donut (Chart.js). Interaction: Tooltips. Justification: Proporciones claras. Library: Chart.js.
+        - Report Info: Ticket promedio, categorías populares, métodos de pago. Goal: Entender comportamiento consumidor. Viz/Method: Gráficos de Barras (Chart.js). Interaction: Tooltips. Justification: Comparación fácil. Library: Chart.js.
+        - Report Info: Modelos de Negocio (Dropshipping, Infoproductos, etc.). Goal: Explorar opciones. Viz/Method: Tarjetas Interactivas (HTML/Tailwind/JS) con detalles expandibles. Interaction: Click to expand. Justification: Presentación estructurada y detallada bajo demanda.
+        - Report Info: Perfiles Freelance y Tarifas. Goal: Mostrar oportunidades freelance. Viz/Method: Tabla HTML (HTML/Tailwind). Justification: Fácil comparación y búsqueda.
+        - Report Info: Estrategias, Marco Legal, Gestión Financiera. Goal: Organizar y detallar información compleja. Viz/Method: Secciones con Acordeones/Pestañas (HTML/Tailwind/JS). Interaction: Click to expand/switch. Justification: Evita sobrecarga de información, permite exploración enfocada.
+        - Report Info: Historias de Éxito. Goal: Inspirar. Viz/Method: Tarjetas con resúmenes (HTML/Tailwind). Justification: Presentación atractiva y concisa.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. Todos los gráficos son con Chart.js (Canvas). Diagramas/flujos implícitos en la estructura de contenido y tarjetas.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar { transition: transform 0.3s ease-in-out; }
+        .content-section { scroll-margin-top: 80px; }
+        .chart-container-wrapper { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 320px; max-height: 45vh; }
+        @media (max-width: 768px) {
+            .chart-container-wrapper { height: 280px; max-height: 40vh; }
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #047857; /* emerald-700 */
+        }
+        .kpi-label {
+            font-size: 0.875rem;
+            color: #64748B; /* slate-500 */
+            margin-top: 0.5rem;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .active .accordion-content {
+            max-height: 1000px; /* Adjust as needed */
+        }
+        .active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        .nav-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #059669; /* emerald-600 */
+            color: white;
+        }
+        .nav-link.active-link {
+            background-color: #047857; /* emerald-700 */
+            color: white;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <button id="menu-toggle" class="md:hidden fixed top-4 left-4 z-30 bg-emerald-600 text-white p-2 rounded-md">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <aside id="sidebar" class="sidebar bg-white text-slate-700 w-64 space-y-4 p-4 fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 z-20 shadow-lg overflow-y-auto">
+            <h1 class="text-2xl font-bold text-emerald-700 mb-6 border-b pb-2 border-slate-300">Riqueza Digital COL</h1>
+            <nav>
+                <a href="#introduccion" class="nav-link active-link"><i class="fas fa-home w-5 mr-2"></i>Introducción</a>
+                <a href="#ecosistema" class="nav-link"><i class="fas fa-chart-line w-5 mr-2"></i>Ecosistema Digital</a>
+                <a href="#modelos-negocio" class="nav-link"><i class="fas fa-briefcase w-5 mr-2"></i>Modelos de Negocio</a>
+                <a href="#estrategias" class="nav-link"><i class="fas fa-cogs w-5 mr-2"></i>Estrategias Clave</a>
+                <a href="#marco-legal" class="nav-link"><i class="fas fa-balance-scale w-5 mr-2"></i>Marco Legal y Fiscal</a>
+                <a href="#gestion-financiera" class="nav-link"><i class="fas fa-calculator w-5 mr-2"></i>Gestión Financiera</a>
+                <a href="#casos-exito" class="nav-link"><i class="fas fa-star w-5 mr-2"></i>Casos de Éxito</a>
+                <a href="#conclusion" class="nav-link"><i class="fas fa-flag-checkered w-5 mr-2"></i>Conclusión</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <section id="introduccion" class="content-section mb-12">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">I. Introducción: El Potencial de la Economía Digital en Colombia</h2>
+                <p class="mb-4 text-lg leading-relaxed">La economía digital en Colombia se ha consolidado como un motor de crecimiento sin precedentes, ofreciendo un terreno fértil para la creación de riqueza. Este informe explora cómo los colombianos pueden aprovechar este dinamismo para construir una riqueza significativa. A continuación, se presentan datos clave que ilustran la magnitud de esta oportunidad.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="crecimientoEcoDigital">25%</div>
+                        <div class="kpi-label">Aumento Economía Digital (2024 vs 2023)</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="ventasOnline2023">COP 62.1B</div>
+                        <div class="kpi-label">Ventas Online Colombia (2023)</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="transaccionesOnline2023">370.5M</div>
+                        <div class="kpi-label">Transacciones Online (2023)</div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow mb-8">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-4">Proyección de Ventas Online en Colombia</h3>
+                    <div class="chart-container-wrapper">
+                        <canvas id="ventasOnlineChart"></canvas>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-2 text-center">Fuente: Reporte - Datos CCCE y otros.</p>
+                </div>
+                <p class="text-slate-600 leading-relaxed">Este crecimiento sostenido y las proyecciones al alza, junto con la alta penetración de internet y la mentalidad "mobile-first", demuestran que el mercado digital colombiano es un ecosistema robusto. La tendencia es inequívoca: el internet se perfila como una vía principal para el desarrollo económico y la acumulación de riqueza en Colombia.</p>
+            </section>
+
+            <section id="ecosistema" class="content-section mb-12">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">II. El Ecosistema Digital Colombiano: Oportunidades y Desafíos</h2>
+                <p class="mb-6 text-lg leading-relaxed">El panorama digital colombiano se caracteriza por una notable expansión. A principios de 2025, el país contaba con 39.51 millones de usuarios de internet (75.7% de la población). La preferencia por dispositivos móviles es marcada, y las redes sociales tienen una influencia significativa. Entender este ecosistema es crucial para identificar oportunidades y anticipar desafíos.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-4">Penetración de Internet y Uso Móvil</h3>
+                        <div class="chart-container-wrapper">
+                            <canvas id="penetracionInternetChart"></canvas>
+                        </div>
+                         <p class="text-sm text-slate-500 mt-2 text-center">Usuarios de Internet: 75.7% de la población. Más de 2/3 del tráfico online es móvil.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-4">Uso de Redes Sociales</h3>
+                        <div class="chart-container-wrapper">
+                            <canvas id="redesSocialesChart"></canvas>
+                        </div>
+                        <p class="text-sm text-slate-500 mt-2 text-center">Usuarios activos: 70.3% de la población total.</p>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-emerald-600 mb-4">Tendencias de Consumo y Categorías Populares</h3>
+                <p class="mb-4">El ticket promedio de compra online alcanzó los COP $207,809 (Q3 2025), un aumento del 9.7% interanual. Las categorías más populares y los métodos de pago preferidos revelan el comportamiento del consumidor.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h4 class="text-lg font-semibold text-emerald-600 mb-3">Categorías Populares (Q3 2025)</h4>
+                        <div class="chart-container-wrapper" style="height: 350px;">
+                             <canvas id="categoriasPopularesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h4 class="text-lg font-semibold text-emerald-600 mb-3">Métodos de Pago Preferidos (Q3 2025)</h4>
+                        <div class="chart-container-wrapper" style="height: 350px;">
+                           <canvas id="metodosPagoChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="text-2xl font-semibold text-emerald-600 mb-4">Retos del Ecosistema</h3>
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            Infraestructura Logística
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Cobertura de internet limitada en zonas rurales e infraestructura de transporte/almacenamiento insuficiente pueden generar costos y tiempos de entrega elevados.</p>
+                            <p class="mt-2 font-semibold text-sm text-emerald-500">Oportunidad: Especializarse en logística de "última milla" o soluciones locales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            Desconfianza del Consumidor
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>39% de consumidores temen comprar online. Preocupaciones por estafas, calidad y devoluciones.</p>
+                            <p class="mt-2 font-semibold text-sm text-emerald-500">Oportunidad: Construir marca basada en transparencia, políticas claras y excelente servicio al cliente.</p>
+                        </div>
+                    </div>
+                     <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            Competencia Internacional
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Empresas globales pueden ofrecer precios más bajos. 43% de colombianos compran a empresas extranjeras.</p>
+                             <p class="mt-2 font-semibold text-sm text-emerald-500">Oportunidad: Ofrecer productos únicos (artesanías locales) o servicio personalizado.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            Brecha de Habilidades Digitales
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Colombia ocupó el puesto 94/141 en el Índice de Habilidades Digitales (2019). Afecta la capacidad de generar valor agregado.</p>
+                            <p class="mt-2 font-semibold text-sm text-emerald-500">Oportunidad: Ofrecer formación y servicios de consultoría digital (marketing, desarrollo, etc.).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="modelos-negocio" class="content-section mb-12">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">III. Modelos de Negocio Digitales con Alto Potencial</h2>
+                <p class="mb-6 text-lg leading-relaxed">Existen diversos modelos de negocio digitales con probado potencial de rentabilidad en Colombia. La elección dependerá de tus habilidades, capital y nicho. Explora algunas opciones populares:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow business-model-card">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-3"><i class="fas fa-store mr-2"></i>E-commerce Especializado</h3>
+                        <p class="text-sm text-slate-600 mb-3">Venta de productos únicos o de nicho (artesanías, ecológicos). Plataformas como Tiendanube, Shopify facilitan la creación.</p>
+                        <div class="details hidden mt-3 pt-3 border-t border-slate-200">
+                            <p class="font-semibold">Ventajas:</p>
+                            <ul class="list-disc list-inside text-sm text-slate-500">
+                                <li>Bajo costo inicial relativo.</li>
+                                <li>Control total de la marca.</li>
+                                <li>Acceso a nichos específicos.</li>
+                            </ul>
+                             <p class="mt-2 font-semibold text-sm text-emerald-500">Ideal para: Productos con identidad local, difíciles de encontrar.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow business-model-card">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-3"><i class="fas fa-shipping-fast mr-2"></i>Dropshipping</h3>
+                        <p class="text-sm text-slate-600 mb-3">Vender online sin gestionar inventario ni envíos. El proveedor se encarga de la logística.</p>
+                        <div class="details hidden mt-3 pt-3 border-t border-slate-200">
+                            <p class="font-semibold">Ventajas:</p>
+                            <ul class="list-disc list-inside text-sm text-slate-500">
+                                <li>Costos iniciales muy reducidos.</li>
+                                <li>Flexibilidad geográfica.</li>
+                                <li>Sin gestión de stock.</li>
+                            </ul>
+                            <p class="mt-2 font-semibold text-sm text-emerald-500">Clave en Colombia: Sortea desafíos logísticos locales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow business-model-card">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-3"><i class="fas fa-bullhorn mr-2"></i>Servicios de Marketing Digital</h3>
+                        <p class="text-sm text-slate-600 mb-3">Ofrecer gestión de redes sociales, SEO, publicidad online a PYMES.</p>
+                        <div class="details hidden mt-3 pt-3 border-t border-slate-200">
+                            <p class="font-semibold">Ventajas:</p>
+                            <ul class="list-disc list-inside text-sm text-slate-500">
+                                <li>Alta demanda por digitalización.</li>
+                                <li>Escalable, basado en habilidades.</li>
+                            </ul>
+                             <p class="mt-2 font-semibold text-sm text-emerald-500">Mercado: PYMES colombianas necesitan fuerte presencia online.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow business-model-card">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-3"><i class="fas fa-code mr-2"></i>Desarrollo Apps/Software</h3>
+                        <p class="text-sm text-slate-600 mb-3">Crear soluciones de software o apps móviles personalizadas.</p>
+                        <div class="details hidden mt-3 pt-3 border-t border-slate-200">
+                            <p class="font-semibold">Ventajas:</p>
+                            <ul class="list-disc list-inside text-sm text-slate-500">
+                                <li>Potencialmente muy lucrativo.</li>
+                                <li>Alta demanda para problemas específicos.</li>
+                            </ul>
+                            <p class="mt-2 font-semibold text-sm text-emerald-500">Sectores: Educación, salud, comercio.</p>
+                        </div>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow business-model-card">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-3"><i class="fas fa-graduation-cap mr-2"></i>Venta de Infoproductos</h3>
+                        <p class="text-sm text-slate-600 mb-3">Comercializar ebooks, cursos online, plantillas, webinars.</p>
+                        <div class="details hidden mt-3 pt-3 border-t border-slate-200">
+                            <p class="font-semibold">Ventajas:</p>
+                            <ul class="list-disc list-inside text-sm text-slate-500">
+                                <li>No requiere inventario ni logística.</li>
+                                <li>Bajos costos de producción.</li>
+                                <li>Escalabilidad casi infinita.</li>
+                            </ul>
+                             <p class="mt-2 font-semibold text-sm text-emerald-500">Ideal para: Compartir conocimientos especializados. Plataformas como Teachable, Hotmart.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow business-model-card">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-3"><i class="fas fa-laptop-house mr-2"></i>Trabajo Freelance</h3>
+                        <p class="text-sm text-slate-600 mb-3">Ofrecer servicios profesionales (IT, diseño, redacción, marketing) por proyecto.</p>
+                        <div class="details hidden mt-3 pt-3 border-t border-slate-200">
+                            <p class="font-semibold">Ventajas:</p>
+                            <ul class="list-disc list-inside text-sm text-slate-500">
+                                <li>Flexibilidad.</li>
+                                <li>Acceso a mercado global.</li>
+                                <li>Tarifas competitivas (especialmente en IT).</li>
+                            </ul>
+                            <p class="mt-2 font-semibold text-sm text-emerald-500">Plataformas: Upwork, Fiverr, Workana. Alta demanda en IA, ciberseguridad, desarrollo.</p>
+                            <div class="mt-4">
+                                <h4 class="font-semibold text-md mb-2">Tarifas Horarias Estimadas (Mayo 2025):</h4>
+                                <ul class="list-none text-sm text-slate-500 space-y-1">
+                                    <li>Diseñador: $19/hora</li>
+                                    <li>Desarrollador Java: $22/hora</li>
+                                    <li>Consultor SAP HANA: $35/hora</li>
+                                    <li>Experto Business Intelligence: $43/hora</li>
+                                    <li>Analista Ciberseguridad: $31/hora</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="estrategias" class="content-section mb-12">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">IV. Estrategias Fundamentales para el Éxito y la Escalabilidad</h2>
+                <p class="mb-6 text-lg leading-relaxed">Para que un negocio digital prospere y genere riqueza, es indispensable implementar estrategias robustas. Estas son algunas claves:</p>
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            <i class="fas fa-digital-tachograph mr-2"></i>Construcción de una Presencia Digital Robusta
+                            <i class="fas fa-chevron-down accordion-icon ml-auto"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Dominio propio, web hosting confiable. Uso de plataformas como Tiendanube, Shopify. Fuerte presencia en redes sociales (más de 36M usuarios en Colombia).</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            <i class="fas fa-mobile-alt mr-2"></i>Optimización para el Comercio Móvil
+                            <i class="fas fa-chevron-down accordion-icon ml-auto"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Más de 2/3 del tráfico online y 87% del volumen de ventas 2024 provienen de móviles. Esencial optimizar la experiencia de compra para estos dispositivos.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            <i class="fas fa-credit-card mr-2"></i>Gestión de Pagos y Opciones Locales
+                            <i class="fas fa-chevron-down accordion-icon ml-auto"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>PSE lidera con 61% (Q3 2025). Integrar opciones locales como Nequi y Bold es crucial para reducir fricción en la compra.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            <i class="fas fa-users mr-2"></i>Fidelización del Cliente y Construcción de Confianza
+                            <i class="fas fa-chevron-down accordion-icon ml-auto"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Estrategias de cross-selling, promociones. Servicio al cliente de calidad, políticas de devolución claras. CRM para experiencias personalizadas.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            <i class="fas fa-lightbulb mr-2"></i>Innovación y Adaptación Continua
+                            <i class="fas fa-chevron-down accordion-icon ml-auto"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Adopción de IA para personalización, optimización de búsqueda, previsión de tendencias y automatización de marketing.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="marco-legal" class="content-section mb-12">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">V. Marco Legal y Fiscal para Emprendedores Digitales</h2>
+                <p class="mb-6 text-lg leading-relaxed">Navegar el entorno digital en Colombia requiere conocer el marco legal y fiscal. El cumplimiento es fundamental para la operación lícita y la confianza del consumidor.</p>
+                
+                <h3 class="text-2xl font-semibold text-emerald-600 mb-4">Requisitos para la Constitución de Empresas Online</h3>
+                <ul class="list-disc list-inside space-y-2 mb-6 bg-white p-4 rounded-lg shadow">
+                    <li><span class="font-semibold">Registro Mercantil:</span> En la Cámara de Comercio local. Verificar disponibilidad del nombre.</li>
+                    <li><span class="font-semibold">Forma Jurídica:</span> Elegir estructura (sociedad limitada, anónima, unipersonal).</li>
+                    <li><span class="font-semibold">NIT:</span> Número de Identificación Tributaria.</li>
+                    <li><span class="font-semibold">RUT:</span> Registro Único Tributario ante la DIAN.</li>
+                    <li><span class="font-semibold">Licencia de Funcionamiento:</span> Emitida por la alcaldía municipal.</li>
+                    <li><span class="font-semibold">Inscripción en Seguridad Social:</span> Para empleados.</li>
+                    <li><span class="font-semibold">Permisos Especiales:</span> Según actividad.</li>
+                </ul>
+
+                <h3 class="text-2xl font-semibold text-emerald-600 mb-4">Obligaciones Tributarias Clave</h3>
+                 <div class="overflow-x-auto bg-white p-4 rounded-lg shadow mb-6">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Impuesto</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tarifa General (2025)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Consideraciones Digitales</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">ISR (Renta)</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">PJ: 35%, PN: Progresiva</td>
+                                <td class="px-6 py-4 text-sm text-slate-500">Aplica a ingresos de fuente nacional y extranjera.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">IVA</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">19% (general); 5% (reducida para algunos servicios digitales)</td>
+                                <td class="px-6 py-4 text-sm text-slate-500">Aplica a servicios digitales prestados en Colombia o desde el exterior.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">Retención en la Fuente</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Varía (ej. 4% tecno, 10% honorarios)</td>
+                                <td class="px-6 py-4 text-sm text-slate-500">El negocio actúa como agente retenedor.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">ICA</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Varía por municipio y actividad</td>
+                                <td class="px-6 py-4 text-sm text-slate-500">Aplica a actividades a través de plataformas digitales.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mb-4"><span class="font-semibold">Facturación Electrónica:</span> Obligatoria. Conservar registros por 5 años.</p>
+
+                <h3 class="text-2xl font-semibold text-emerald-600 mb-4">Protección al Consumidor y Datos Personales</h3>
+                <div class="space-y-3">
+                    <p><span class="font-semibold">Ley 1480 de 2011 (Estatuto del Consumidor):</span> Prohíbe publicidad engañosa, establece derecho de retracto (5 días hábiles), obliga a información clara y seguridad en transacciones.</p>
+                    <p><span class="font-semibold">Ley 1581 de 2012 (Protección de Datos Personales):</span> Principios de legalidad, finalidad, consentimiento, veracidad, transparencia, seguridad. Empresas responsables de proteger datos.</p>
+                </div>
+                <p class="mt-4 text-sm text-emerald-600 font-semibold">El cumplimiento legal y fiscal es una inversión en confianza y sostenibilidad. La DIAN es el actor central. Se recomienda asesoría profesional.</p>
+            </section>
+
+            <section id="gestion-financiera" class="content-section mb-12">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">VI. Gestión Financiera Inteligente para Maximizar Ganancias</h2>
+                <p class="mb-6 text-lg leading-relaxed">La construcción de riqueza requiere una gestión financiera rigurosa. Optimizar la rentabilidad neta es clave.</p>
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            Análisis Financiero y Metas
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Revisar estados de resultados, balances, flujos de efectivo. Definir metas financieras claras (aumentar ingresos, reducir costos).</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            Presupuestos y Control de Flujo de Efectivo
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Presupuesto detallado con ingresos y gastos proyectados. Monitorear cobros y pagos. Reserva de efectivo para emergencias.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            Automatización y Contabilidad Precisa
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Usar software para facturación, inventario, contabilidad. Ahorra tiempo, reduce errores, fundamental para evitar sanciones DIAN.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            Deducciones Fiscales e Incentivos
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>Gastos deducibles: salarios, tecnología, intereses. Investigar beneficios para sectores prioritarios. Régimen Simple de Tributación para ingresos < $3,800M anuales.</p>
+                        </div>
+                    </div>
+                     <div class="bg-white p-4 rounded-lg shadow accordion-item">
+                        <button class="w-full flex justify-between items-center text-left font-semibold text-emerald-600 py-2">
+                            Errores Fiscales a Evitar
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </button>
+                        <div class="accordion-content pt-2 text-slate-600">
+                            <p>No registrar todos los ingresos, olvidar fechas de declaración, no aprovechar deducciones, falta de organización financiera.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="casos-exito" class="content-section mb-12">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">VII. Historias de Éxito: Inspiración Colombiana</h2>
+                <p class="mb-6 text-lg leading-relaxed">Emprendedores colombianos han demostrado el vasto potencial para construir riqueza online. Sus historias ofrecen valiosa inspiración.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-2">Simón Borrero (Rappi)</h3>
+                        <p class="text-sm text-slate-600">Plataforma de delivery que revolucionó la logística y e-commerce en LatAm. Apalancó tecnología e innovación.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-2">David Vélez (Nubank)</h3>
+                        <p class="text-sm text-slate-600">Banco digital más grande de LatAm. Transformó el acceso a servicios financieros con tecnología.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-2">Alexander Torrenegra (Torre, Voice123)</h3>
+                        <p class="text-sm text-slate-600">Plataformas globales que revolucionaron búsqueda de empleo y contratación freelance.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-2">Freddy Vega (Platzi)</h3>
+                        <p class="text-sm text-slate-600">Plataforma de formación online en programación, marketing y negocios para hispanohablantes.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold text-emerald-600 mb-2">Manuela y Camilo Sánchez (Laika)</h3>
+                        <p class="text-sm text-slate-600">E-commerce especializado en productos para mascotas, con entregas rápidas y modelo de suscripción.</p>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-semibold text-emerald-600 mt-8 mb-4">Lecciones Aprendidas de los Exitosos:</h3>
+                <ul class="list-disc list-inside space-y-2 bg-white p-4 rounded-lg shadow">
+                    <li>Identificar y resolver problemas a gran escala.</li>
+                    <li>Uso intensivo de la tecnología como núcleo del negocio.</li>
+                    <li>Enfoque en la experiencia del usuario.</li>
+                    <li>Mentalidad de escalabilidad y ambición regional/global.</li>
+                    <li>Resiliencia y adaptación continua.</li>
+                </ul>
+            </section>
+
+            <section id="conclusion" class="content-section mb-12">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">VIII. Conclusión: Tu Camino Hacia la Riqueza Digital</h2>
+                <p class="mb-4 text-lg leading-relaxed">El panorama digital colombiano ofrece oportunidades sin precedentes. La clave reside en adoptar modelos de negocio rentables, implementar estrategias fundamentales, cumplir con el marco legal y gestionar las finanzas inteligentemente.</p>
+                <p class="mb-6 text-slate-600 leading-relaxed">El e-commerce especializado (especialmente dropshipping), los servicios digitales de alta demanda, la venta de infoproductos y el trabajo freelance en tecnología son vías prometedoras. El éxito depende de una presencia digital robusta, optimización móvil, pagos locales, fidelización, innovación, y cumplimiento legal y fiscal. La asesoría profesional es indispensable.</p>
+                
+                <h3 class="text-2xl font-semibold text-emerald-600 mb-4">Pasos Iniciales para el Aspirante a Emprendedor:</h3>
+                <ol class="list-decimal list-inside space-y-3 bg-white p-6 rounded-lg shadow text-slate-600">
+                    <li><span class="font-semibold">Identificar un Nicho:</span> Buscar una necesidad insatisfecha o problema a resolver en Colombia o LatAm.</li>
+                    <li><span class="font-semibold">Desarrollar Habilidades Clave:</span> Invertir en capacitación en áreas tecnológicas y digitales de alta demanda (IA, ciberseguridad, desarrollo, marketing digital).</li>
+                    <li><span class="font-semibold">Construir una Presencia Digital Estratégica:</span> Plataforma optimizada para móviles, intuitiva, con métodos de pago locales.</li>
+                    <li><span class="font-semibold">Buscar Asesoría Profesional:</span> Expertos legales y fiscales desde el inicio para cumplimiento y gestión eficiente.</li>
+                    <li><span class="font-semibold">Priorizar la Experiencia del Cliente:</span> Construir confianza, transparencia y ofrecer una UX excepcional.</li>
+                </ol>
+                <p class="mt-8 text-center text-emerald-600 font-semibold text-lg">El internet es un vasto océano de oportunidades. ¡Innova, aprende y ejecuta con disciplina!</p>
+            </section>
+            
+            <footer class="text-center text-sm text-slate-500 mt-12 py-6 border-t border-slate-300">
+                Aplicación Interactiva basada en el informe "Guía Estratégica para Colombianos: Cómo Construir Riqueza a Través de Negocios Digitales".
+                <br>&copy; 2025 - Creado con fines demostrativos.
+            </footer>
+        </main>
+    </div>
+
+<script>
+    const ventasOnlineData = {
+        labels: ['2022 (Estimado)', '2023 (Real)', '2025 (Proyección)'],
+        datasets: [{
+            label: 'Ventas Online en Colombia (Billones COP)',
+            data: [ (62.1 / 1.5), 62.1, 20.7], 
+            backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(75, 192, 192, 0.6)', 'rgba(255, 159, 64, 0.6)'],
+            borderColor: ['rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)', 'rgba(255, 159, 64, 1)'],
+            borderWidth: 1
+        }]
+    };
+    const ventasOnlineCtx = document.getElementById('ventasOnlineChart').getContext('2d');
+    new Chart(ventasOnlineCtx, {
+        type: 'bar',
+        data: ventasOnlineData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, ticks: { callback: function(value) { return 'COP ' + value + 'B'; } } }
+            },
+            plugins: { legend: { display: true } }
+        }
+    });
+
+    const penetracionInternetData = {
+        labels: ['Usuarios de Internet (75.7%)', 'Población sin Internet (24.3%)'],
+        datasets: [{
+            data: [75.7, 24.3],
+            backgroundColor: ['rgba(75, 192, 192, 0.8)', 'rgba(201, 203, 207, 0.8)'],
+            borderColor: ['rgba(75, 192, 192, 1)', 'rgba(201, 203, 207, 1)'],
+            borderWidth: 1
+        }]
+    };
+    const penetracionInternetCtx = document.getElementById('penetracionInternetChart').getContext('2d');
+    new Chart(penetracionInternetCtx, {
+        type: 'doughnut',
+        data: penetracionInternetData,
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+    });
+
+    const redesSocialesData = {
+        labels: ['Usuarios Redes Sociales (70.3%)', 'No Usuarios (29.7%)'],
+        datasets: [{
+            data: [70.3, 29.7],
+            backgroundColor: ['rgba(255, 159, 64, 0.8)', 'rgba(201, 203, 207, 0.8)'],
+            borderColor: ['rgba(255, 159, 64, 1)', 'rgba(201, 203, 207, 1)'],
+            borderWidth: 1
+        }]
+    };
+    const redesSocialesCtx = document.getElementById('redesSocialesChart').getContext('2d');
+    new Chart(redesSocialesCtx, {
+        type: 'doughnut',
+        data: redesSocialesData,
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+    });
+    
+    const categoriasPopularesData = {
+        labels: ['Tecnología', 'Otros Retail', 'Entretenimiento', 'Otros Servicios', 'Deporte', 'Otros'],
+        datasets: [{
+            label: '% Participación (Q3 2025)',
+            data: [22.4, 12.8, 12.3, 10, 7.5, (100-22.4-12.8-12.3-10-7.5)],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)', 'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)', 'rgba(153, 102, 255, 0.7)', 'rgba(201, 203, 207, 0.7)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(201, 203, 207, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+    const categoriasPopularesCtx = document.getElementById('categoriasPopularesChart').getContext('2d');
+    new Chart(categoriasPopularesCtx, {
+        type: 'pie',
+        data: categoriasPopularesData,
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+    });
+
+    const metodosPagoData = {
+        labels: ['PSE (Débito cuenta)', 'Tarjeta Débito/Crédito', 'Efectivo y otros'],
+        datasets: [{
+            label: '% Preferencia (Q3 2025)',
+            data: [61, 36.2, 2.74],
+            backgroundColor: ['rgba(75, 192, 192, 0.7)', 'rgba(54, 162, 235, 0.7)', 'rgba(255, 99, 132, 0.7)'],
+            borderColor: ['rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255,99,132,1)'],
+            borderWidth: 1
+        }]
+    };
+    const metodosPagoCtx = document.getElementById('metodosPagoChart').getContext('2d');
+    new Chart(metodosPagoCtx, {
+        type: 'bar',
+        data: metodosPagoData,
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { x: { beginAtZero: true, ticks: { callback: function(value) { return value + '%'; } } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.content-section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                navLinks.forEach(l => l.classList.remove('active-link'));
+                e.currentTarget.classList.add('active-link');
+                if (window.innerWidth < 768) { // md breakpoint
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        });
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active-link', link.getAttribute('href').substring(1) === entry.target.id);
+                    });
+                }
+            });
+        }, { rootMargin: "-50% 0px -50% 0px", threshold: 0.1 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        accordionItems.forEach(item => {
+            const button = item.querySelector('button');
+            button.addEventListener('click', () => {
+                // Close other open accordions in the same group if needed
+                // accordionItems.forEach(otherItem => {
+                //    if (otherItem !== item && otherItem.classList.contains('active')) {
+                //        otherItem.classList.remove('active');
+                //    }
+                // });
+                item.classList.toggle('active');
+            });
+        });
+
+        const businessModelCards = document.querySelectorAll('.business-model-card');
+        businessModelCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const details = card.querySelector('.details');
+                details.classList.toggle('hidden');
+                card.classList.toggle('bg-emerald-50'); 
+            });
+        });
+    });
+</script>
+</body>
+</html>
